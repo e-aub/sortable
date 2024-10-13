@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Villain's Superhero Database</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="./script.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>Villain's Superhero Database</h1>
+        <input type="text" id="search" placeholder="Search by name...">
+        <label for="pageSize">Results per page:</label>
+        <select id="pageSize">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+            <option value="all">All</option>
+        </select>
+    </header>
+    <main>
+        <table id="heroesTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable('icon')">Icon</th>
+                    <th onclick="sortTable('name')">Name</th>
+                    <th onclick="sortTable('fullName')">Full Name</th>
+                    <th onclick="sortTable('powerstats')">Powerstats</th>
+                    <th onclick="sortTable('race')">Race</th>
+                    <th onclick="sortTable('gender')">Gender</th>
+                    <th onclick="sortTable('height')">Height</th>
+                    <th onclick="sortTable('weight')">Weight</th>
+                    <th onclick="sortTable('placeOfBirth')">Place Of Birth</th>
+                    <th onclick="sortTable('alignment')">Alignment</th>
+                </tr>
+            </thead>
+            <tbody id="heroesBody">
+
+            </tbody>
+        </table>
+        <div id="pagination">
+            <button id="prevPage">Previous</button>
+            <button id="nextPage">Next</button>
+        </div>
+    </main>
+</body>
+</html>
