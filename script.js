@@ -140,11 +140,70 @@ function putDataInTable(superHeroesData, start = 0, end = superHeroesData.length
 }
 
 
+function sortByWeight(superHeroesData, order = true) {
+    superHeroesData.sort((a, b) => {
+        const weightA = parseFloat(a.weight) || "";
+        const weightB = parseFloat(b.weight) || "";
+
+        if (weightA === "" && weightB === "") return 0;
+
+        if (weightA === "") return 1;
+        if (weightB === "") return -1;
+
+        const comparison = weightA - weightB;
+        return order ? comparison : -comparison;
+    });
+
+    putDataInTable(superHeroesData);
+}
+
+
+function convertHeightToCm(heightArray) {
+
+    for (const height of heightArray) {
+        if (height.includes('cm')) {
+            const value = parseFloat(height);
+            return value;
+        }
+    }
+
+
+    for (const height of heightArray) {
+        if (height.includes('m')) {
+            const value = parseFloat(height);
+            return value * 100;
+        }
+    }
+    return 0;
+}
+
+
+function sortByHeight(superHeroesData, order = true) {
+    superHeroesData.sort((a, b) => {
+        const valueA = convertHeightToCm(a.height);
+        const valueB = convertHeightToCm(b.height);
+
+        if (valueA === 0 && valueB !== 0) return 1;
+        if (valueB === 0 && valueA !== 0) return -1;
+        if (valueA === 0 && valueB === 0) return 0;
+
+        const comparison = valueA - valueB;
+        return order ? comparison : -comparison;
+    });
+
+    putDataInTable(superHeroesData);
+}
+
+
+
+
 function sortTable(key) {
-    if (key === 'height' || key === 'weight') {
-        sortByNumbers(superHeroesData, key, sortDirection);
-    } else if (key === 'powerStats') {
+    if (key === 'weight') {
+        sortByWeight(superHeroesData, sortDirection);
+    } else if (key === 'powerstats') {
         sortByPowerStats(superHeroesData, sortDirection);
+    } else if (key === 'height') {
+        sortByHeight(superHeroesData, sortDirection);
     } else {
         sortByAlphabet(superHeroesData, key, sortDirection);
     }
@@ -175,24 +234,23 @@ function sortByNumbers(superHeroesData, key, order = 'asc') {
     putDataInTable(superHeroesData, 0, tableContentLength);
     currentPage = 1
 }
-function sortByPowerStats(superHeroesData, order = 'asc') {
+function getPowerStatsTotal(hero) {
+    if (!hero.powerStats) return 0;
+
+    return Object.values(hero.powerStats)
+        .reduce((total, stat) => total + (parseFloat(stat) || 0), 0);
+}
+function sortByPowerStats(superHeroesData, order = true) {
     superHeroesData.sort((a, b) => {
-        const getPowerStatsTotal = (hero) => {
-            let total = 0;
-            for (let stat in hero.powerStats) {
-                total += parseFloat(hero.powerStats[stat]) || 0;
-            }
-            return total;
-        };
         const valueA = getPowerStatsTotal(a);
         const valueB = getPowerStatsTotal(b);
-        const comparison = valueA - valueB;
-        return order === 'asc' ? comparison : -comparison;
-    });
-    putDataInTable(superHeroesData, 0, tableContentLength);
-    currentPage = 1
-}
 
+        const comparison = valueA - valueB;
+        return order ? comparison : -comparison;
+    });
+
+    putDataInTable(superHeroesData);
+}
 
 
 
@@ -201,44 +259,90 @@ function sortByPowerStats(superHeroesData, order = 'asc') {
 
 function search() {
     let searchResults = new Set;
-    input = document.getElementById('search');
-    filter = input.value.toUpperCase();
+    let input = document.getElementById('search');
+    let filterElement = document.getElementById('filterRange')
+    let filterRange = filterElement.value
+    let filter = input.value.toUpperCase();
     for (i = 0; i < superHeroesData.length; i++) {
-
-        if (superHeroesData[i].race ? superHeroesData[i].race.toUpperCase().indexOf(filter) > -1 : false) {
-            searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'race') {
+            if (superHeroesData[i].race ? superHeroesData[i].race.toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
+            }
         }
-        if (superHeroesData[i].name ? superHeroesData[i].name.toUpperCase().indexOf(filter) > -1 : false) {
-            searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'name') {
+            if (superHeroesData[i].name ? superHeroesData[i].name.toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
 
+            }
         }
-        if (superHeroesData[i].placeOfBirth ? superHeroesData[i].placeOfBirth.toUpperCase().indexOf(filter) > -1 : false) {
-            searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'placeOfBirth') {
+            if (superHeroesData[i].placeOfBirth ? superHeroesData[i].placeOfBirth.toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
+            }
         }
-        if (superHeroesData[i].fullName ? superHeroesData[i].fullName.toUpperCase().indexOf(filter) > -1 : false) {
-            searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'fullName') {
+            if (superHeroesData[i].fullName ? superHeroesData[i].fullName.toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
 
+            }
         }
-        if (superHeroesData[i].gender ? superHeroesData[i].gender.toUpperCase().indexOf(filter) > -1 : false) {
-            searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'gender') {
+            if (superHeroesData[i].gender ? superHeroesData[i].gender.toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
 
+            }
         }
-        if (superHeroesData[i].height ? superHeroesData[i].height.toString().toUpperCase().indexOf(filter) > -1 : false) {
-            searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'height') {
+            if (superHeroesData[i].height ? superHeroesData[i].height.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
 
+            }
         }
-        if (superHeroesData[i].weight ? superHeroesData[i].weight.toString().toUpperCase().indexOf(filter) > -1 : false) {
-            searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'weight') {
+            if (superHeroesData[i].weight ? superHeroesData[i].weight.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
 
+            }
         }
-        // if (superHeroesData[i].powerStats ? superHeroesData[i].powerStats.toUpperCase().indexOf(filter) > -1:false) {
-        //     searchResults.add(superHeroesData[i]);
+        if (filterRange === 'all' || filterRange === 'intellgence') {
+            if (superHeroesData[i].powerStats.intelligence ? superHeroesData[i].powerStats.intelligence.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
 
-        // }
+            }
+        }
+        if (filterRange === 'all' || filterRange === 'strenght') {
+            if (superHeroesData[i].powerStats.strength ? superHeroesData[i].powerStats.strength.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
+
+            }
+        }
+        if (filterRange === 'all' || filterRange === 'speed') {
+            if (superHeroesData[i].powerStats.speed ? superHeroesData[i].powerStats.speed.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
+
+            }
+        }
+        if (filterRange === 'all' || filterRange === 'durability') {
+            if (superHeroesData[i].powerStats.durability ? superHeroesData[i].powerStats.durability.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
+
+            }
+        }
+        if (filterRange === 'all' || filterRange === 'power') {
+            if (superHeroesData[i].powerStats.power ? superHeroesData[i].powerStats.power.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
+
+            }
+        }
+        if (filterRange === 'all' || filterRange === 'combat') {
+            if (superHeroesData[i].powerStats.combat ? superHeroesData[i].powerStats.combat.toString().toUpperCase().indexOf(filter) > -1 : false) {
+                searchResults.add(superHeroesData[i]);
+
+            }
+        }
 
 
 
     }
     putDataInTable(Array.from(searchResults))
-    console.log(searchResults)
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,30 @@
     <link rel="stylesheet" href="styles.css">
     <script src="./script.js" defer></script>
 </head>
+
 <body>
     <header>
         <h1>Superhero Database</h1>
+        <select name="pour filtre" id="filterRange">
+            <option value="all" selected>All</option>
+            <option value="name">Name</option>
+            <option value="fullName">FullName</option>
+            <option value="powerStats">powerstats</option>
+            <option value="race">race</option>
+            <option value="gender">gender</option>
+            <option value="intelligence">intelligence</option>
+            <option value="strenght">strenght</option>
+            <option value="speed">speed</option>
+            <option value="combat">combat</option>
+            <option value="durability">durability</option>
+
+
+            <option value="height">height</option>
+            <option value="weight">weight</option>
+            <option value="placeOfBirth">placeOfBirth</option>
+            <option value="alignment">alignment</option>
+
+        </select>
         <input type="text" id="search" placeholder="Search by name..." onkeyup="search()">
         <label for="pageSize">Results per page:</label>
         <select id="pageSize">
@@ -45,4 +67,5 @@
         </div>
     </main>
 </body>
+
 </html>
